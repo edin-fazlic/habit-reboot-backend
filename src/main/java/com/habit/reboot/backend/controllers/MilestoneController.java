@@ -16,8 +16,8 @@ public class MilestoneController {
         this.milestoneService = milestoneService;
     }
 
-    @GetMapping("/list")
-    public List<MilestoneDto> getMilestones() {
+    @GetMapping("/{habitId}/list")
+    public List<MilestoneDto> getMilestones(@PathVariable long habitId) {
         return milestoneService.getMilestoneList();
     }
 
