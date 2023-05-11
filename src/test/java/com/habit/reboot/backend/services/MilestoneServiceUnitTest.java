@@ -3,6 +3,7 @@ package com.habit.reboot.backend.services;
 
 import com.habit.reboot.backend.data.MilestoneTest;
 import com.habit.reboot.backend.models.MilestoneDto;
+import com.habit.reboot.backend.models.entities.Milestone;
 import com.habit.reboot.backend.repositories.MilestoneRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 public class MilestoneServiceUnitTest {
@@ -81,4 +85,79 @@ public class MilestoneServiceUnitTest {
                 .hasMessageContaining("does not exist");
     }
 
+    @Test
+    public void givenMilestone_whenCreateMilestone_thenMilestoneIsReturned() {
+        // arrange
+        MilestoneDto inputMilestoneDto = MilestoneTest.milestoneDto1();
+        inputMilestoneDto.setId(0L); // reset id
+        Milestone outputMilestone = MilestoneTest.milestone();
+
+        Mockito.when(milestoneRepository.save(any(Milestone.class)))
+                .thenReturn(outputMilestone);
+
+        // act
+        MilestoneDto resultMilestone = milestoneService.createMilestone(inputMilestoneDto);
+
+        // assert
+        assertThat(resultMilestone).isNotNull();
+        assertThat(resultMilestone.getTitle()).isEqualTo(inputMilestoneDto.getTitle());
+        assertThat(resultMilestone.getId()).isNotEqualTo(0L);
+    }
+
+    @Test
+    public void givenMilestone_whenCreateMilestone_thenRepositoryCalled() {
+        // arrange
+        MilestoneDto milestoneDto = MilestoneTest.milestoneDto3();
+
+        Mockito.when(milestoneRepository.save(any(Milestone.class)))
+                .thenReturn(MilestoneTest.milestone());
+
+        // act
+        milestoneService.createMilestone(milestoneDto);
+
+        // assert
+        verify(milestoneRepository, times(1)).save(any(Milestone.class));
+    }
+
+    @Test
+    public void givenMilestoneAndValidId_whenUpdate_thenMilestoneReturned() {
+        // arrange
+        MilestoneDto inputMilestoneDto = MilestoneTest.milestoneDto1();
+        inputMilestoneDto.setId(0L); // reset id
+        long id = 1L;
+        Milestone outputMilestone = MilestoneTest.milestone();
+        outputMilestone.setId(id);
+
+        Mockito.when(milestoneRepository.findById(id))
+                .thenReturn(Optional.of(outputMilestone));
+        Mockito.when(milestoneRepository.save(any(Milestone.class)))
+                .thenReturn(outputMilestone);
+
+        // act
+        MilestoneDto resultMilestone = milestoneService.updateMilestone(id, inputMilestoneDto);
+
+        // assert
+        assertThat(resultMilestone).isNotNull();
+        assertThat(resultMilestone.getTitle()).isEqualTo(inputMilestoneDto.getTitle());
+        assertThat(resultMilestone.getId()).isEqualTo(id);
+    }
+
+    @Test
+    public void givenInvalidId_whenUpdate_thenExceptionShouldBeThrown() {
+        assertThatThrownBy(() -> milestoneService.updateMilestone(2L, MilestoneTest.milestoneDto3()))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("does not exist");
+    }
+
+    @Test
+    public void givenMilestone_whenDelete_thenRepositoryCalled() {
+        // arrange
+        long id = 2L;
+
+        // act
+        milestoneService.deleteMilestone(id);
+
+        // assert
+        verify(milestoneRepository, times(1)).deleteById(id);
+    }
 }
