@@ -9,12 +9,12 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "milestone")
+@Table(name = "log")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Milestone {
+public class Log {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -23,12 +23,9 @@ public class Milestone {
     @JoinColumn(name = "habit", referencedColumnName = "id")
     private Habit habit;
 
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "color")
-    private String color;
-
     @Column(name = "time")
-    private Long time;
+    private Date time;
+
+    @Column(name = "reason")
+    private String reason;
 }

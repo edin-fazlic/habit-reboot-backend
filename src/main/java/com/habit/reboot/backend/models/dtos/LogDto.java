@@ -1,4 +1,4 @@
-package com.habit.reboot.backend.models;
+package com.habit.reboot.backend.models.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

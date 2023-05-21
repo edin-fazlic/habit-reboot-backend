@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
 
-    List<Milestone> findAllByColor(String color);
-    List<Milestone> findAllByColorIn(List<String> colors);
+    List<Milestone> findAllByHabitId(Long habitId);
 
 }

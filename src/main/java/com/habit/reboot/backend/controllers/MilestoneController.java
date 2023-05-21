@@ -1,6 +1,6 @@
 package com.habit.reboot.backend.controllers;
 
-import com.habit.reboot.backend.models.MilestoneDto;
+import com.habit.reboot.backend.models.dtos.MilestoneDto;
 import com.habit.reboot.backend.services.MilestoneService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +16,9 @@ public class MilestoneController {
         this.milestoneService = milestoneService;
     }
 
-    @GetMapping("/{habitId}/list")
-    public List<MilestoneDto> getMilestones(@PathVariable long habitId) {
-        return milestoneService.getMilestoneList();
+    @GetMapping("/habit/{habitUuid}/list")
+    public List<MilestoneDto> getMilestones(@PathVariable String habitUuid) {
+        return milestoneService.getMilestoneList(habitUuid);
     }
 
     @GetMapping("/{id}")
@@ -26,14 +26,14 @@ public class MilestoneController {
         return milestoneService.getMilestone(id);
     }
 
-    @PostMapping
-    public MilestoneDto createMilestone(@RequestBody MilestoneDto milestone) {
-        return milestoneService.createMilestone(milestone);
+    @PostMapping("/habit/{habitUuid}")
+    public MilestoneDto createMilestone(@PathVariable String habitUuid, @RequestBody MilestoneDto milestone) {
+        return milestoneService.createMilestone(habitUuid, milestone);
     }
 
-    @PutMapping("/{id}")
-    public MilestoneDto updateMilestone(@PathVariable long id, @RequestBody MilestoneDto milestone) {
-        return milestoneService.updateMilestone(id, milestone);
+    @PutMapping("/habit/{habitUuid}/{id}")
+    public MilestoneDto updateMilestone(@PathVariable String habitUuid, @PathVariable long id, @RequestBody MilestoneDto milestone) {
+        return milestoneService.updateMilestone(habitUuid, id, milestone);
     }
 
     @DeleteMapping("/{id}")

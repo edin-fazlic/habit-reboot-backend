@@ -1,6 +1,6 @@
 package com.habit.reboot.backend.controllers;
 
-import com.habit.reboot.backend.models.HabitDto;
+import com.habit.reboot.backend.models.dtos.HabitDto;
 import com.habit.reboot.backend.services.HabitService;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +14,13 @@ public class HabitController {
         this.habitService = habitService;
     }
 
-    @GetMapping("/{id}")
-    public HabitDto getMilestone(@PathVariable long id) {
-        return habitService.getHabit(id);
+    @GetMapping("/{uuid}")
+    public HabitDto getHabit(@PathVariable String uuid) {
+        return habitService.getHabitByUuid(uuid);
     }
 
     @PostMapping
-    public HabitDto createMilestone(@RequestBody HabitDto habit) {
+    public HabitDto createHabit(@RequestBody HabitDto habit) {
         return habitService.createHabit(habit);
     }
 

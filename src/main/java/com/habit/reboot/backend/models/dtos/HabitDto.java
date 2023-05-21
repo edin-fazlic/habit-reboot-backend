@@ -1,17 +1,15 @@
-package com.habit.reboot.backend.models;
+package com.habit.reboot.backend.models.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class HabitDto {
     private Long id;
+    private String uuid;
     private String title;
-    private Date startTime;
     private Long timeSpan;
 }

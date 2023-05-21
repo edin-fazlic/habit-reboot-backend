@@ -1,6 +1,6 @@
 package com.habit.reboot.backend.controllers;
 
-import com.habit.reboot.backend.models.LogDto;
+import com.habit.reboot.backend.models.dtos.LogDto;
 import com.habit.reboot.backend.services.LogService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,14 +16,14 @@ public class LogController {
         this.logService = logService;
     }
 
-    @GetMapping("/{habitId}/list")
-    public List<LogDto> getMilestone(@PathVariable long habitId) {
-        return logService.getLogs(habitId);
+    @GetMapping("/habit/{habitUuid}/list")
+    public List<LogDto> getLogs(@PathVariable String habitUuid) {
+        return logService.getLogList(habitUuid);
     }
 
-    @PostMapping("/{habitId}")
-    public LogDto createMilestone(@PathVariable long habitId, @RequestBody LogDto log) {
-        return logService.createLog(habitId, log);
+    @PostMapping("/habit/{habitUuid}")
+    public LogDto createLog(@PathVariable String habitUuid, @RequestBody LogDto log) {
+        return logService.createLog(habitUuid, log);
     }
 
 }

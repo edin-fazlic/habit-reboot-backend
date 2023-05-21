@@ -17,7 +17,7 @@ spring:
       repositories.enabled: true
 
 frontend:
-  url: ${FRONTEND_API_URL:"http://localhost:4200"}
+  url: ${FRONTEND_API_URL:http://localhost:4200}
 
 security:
   jwt:

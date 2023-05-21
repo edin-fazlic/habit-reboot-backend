@@ -1,28 +1,54 @@
 package com.habit.reboot.backend.services;
 
-import com.habit.reboot.backend.models.LogDto;
+import com.habit.reboot.backend.models.dtos.LogDto;
+import com.habit.reboot.backend.models.entities.Habit;
+import com.habit.reboot.backend.models.entities.Log;
+import com.habit.reboot.backend.repositories.LogRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class LogService {
 
+    private final LogRepository logRepository;
+    private final HabitService habitService;
 
-    private final Map<Long, List<LogDto>> logs = new HashMap<>();
+    public LogService(LogRepository logRepository,
+                      HabitService milestoneService) {
+        this.logRepository = logRepository;
+        this.habitService = milestoneService;
+    }
 
-    public LogDto createLog(long habitId, LogDto habit) {
-        List<LogDto> habitLogs = logs.get(habitId);
-        if (habitLogs == null) {
-            habitLogs = new ArrayList<>();
-            logs.put(habitId, habitLogs);
+    public LogDto createLog(String habitUuid, LogDto logDto) {
+        Habit habit = habitService.breakHabit(habitUuid);
+        Log entity = toEntity(logDto);
+        entity.setHabit(habit);
+        entity.setTime(new Date());
+        Log log = logRepository.save(entity);
+
+        return toDto(log);
+    }
+
+    public List<LogDto> getLogList(String habitUuid) {
+        List<Log> logs = logRepository.findAllByHabitUuidOrderByIdDesc(habitUuid);
+        List<LogDto> result = new ArrayList<>();
+        for (Log log : logs) {
+            result.add(toDto(log));
         }
-        habitLogs.add(new LogDto(new Date(), habit.getReason()));
-        return habitLogs.get(habitLogs.size() - 1);
+        return result;
     }
 
-    public List<LogDto> getLogs(long habitId) {
-        return logs.get(habitId);
+    private static LogDto toDto(Log log) {
+        return new LogDto(log.getTime(),
+                log.getReason());
     }
 
+    private static Log toEntity(LogDto logDto) {
+        Log log = new Log();
+        log.setReason(logDto.getReason());
+        return log;
+    }
 }
