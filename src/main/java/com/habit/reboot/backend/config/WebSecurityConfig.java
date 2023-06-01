@@ -29,7 +29,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/authenticate",
                                 "/habit/**",
                                 "/milestone/**",
-                                "/log/**"
+                                "/log/**",
+                                "/bug-report/**"
                                 ).permitAll()
                         // all other requests need to be authenticated
                         .anyRequest().authenticated()
